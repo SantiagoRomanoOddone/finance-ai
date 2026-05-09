@@ -4,10 +4,21 @@ argument-hint: <amount-usd>
 allowed-tools: Bash, Read
 ---
 
-Run `python src/monthly.py $ARGUMENTS` and use its full output (which includes the prompt instructions, profile, month config, and investment plan) to produce the review.
+Run `python src/invest.py $ARGUMENTS` and produce the review using this exact structure:
 
-Follow the rules inside the prompt.md section of that output:
-- Direct, no fluff. No disclaimers.
-- Concrete actions for THIS month's cash.
-- Flag concentration, sector gaps, drift from convictions.
-- If nothing meaningful changed since last month, say so in one line.
+**This month: $[AMOUNT]**
+
+| Asset | USD | % of total |
+|-------|-----|------------|
+| (each asset from main allocation, sorted by USD desc) |
+
+**Stocks ($[STOCKS_AMOUNT])**
+
+| Ticker | USD | % of stocks |
+|--------|-----|-------------|
+| (each ticker from stocks breakdown, sorted by USD desc) |
+
+**Recommendations:**
+- (max 4 bullets: concentration risks, names to cut/add, sizing issues)
+
+Rules: no fluff, no disclaimers, no extra sections, percentages calculated from the script output.
