@@ -1,17 +1,19 @@
 import sys, glob, yaml
+from pathlib import Path
 
-MONTHS_DIR = "months"
+ROOT = Path(__file__).parent.parent
+MONTHS_DIR = ROOT / "months"
 
 def latest_config():
-    files = sorted(glob.glob(f"{MONTHS_DIR}/*.yaml"))
+    files = sorted(MONTHS_DIR.glob("*.yaml"))
     if not files:
         raise SystemExit(f"No configs in {MONTHS_DIR}/")
     return files[-1]
 
 def main(amount, cfg_path=None):
-    cfg_path = cfg_path or latest_config()
-    print(f"Using config: {cfg_path}")
-    cfg = yaml.safe_load(open(cfg_path))
+    cfg_path = Path(cfg_path) if cfg_path else latest_config()
+    print(f"Using config: {cfg_path.relative_to(ROOT)}")
+    cfg = yaml.safe_load(cfg_path.open())
     alloc = cfg["allocation"]
     breakdown = cfg.get("breakdown", {})
 
