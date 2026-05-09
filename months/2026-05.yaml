@@ -1,0 +1,27 @@
+# Monthly portfolio config. Copy this file each month and tweak.
+allocation:
+  funds: 0.10        # FCI
+  GLD:   0.08        # Global
+  VEA:   0.10        # Europe, Japan, Australia
+  BRKB:  0.02        # US
+  SPY:   0.20        # US
+  XLE:   0.02        # US
+  IEMG:  0.06        # China, India, Brazil, Taiwan, Korea...
+  EWZ:   0.02        # Brazil
+  stocks: 0.40
+
+# Stocks split based on your latest distribution (renormalized to sum=1.0)
+breakdown:
+  stocks:
+    GGAL:  0.0206
+    YPF:   0.2545
+    AAPL:  0.0386
+    AMZN:  0.0797
+    GOOGL: 0.0720
+    MELI:  0.0720
+    META:  0.1131
+    MSFT:  0.0386
+    NVDA:  0.0848
+    TSM:   0.0411
+    V:     0.0591
+    VIST:  0.1259
