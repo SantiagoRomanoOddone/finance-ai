@@ -1,10 +1,14 @@
 ---
 description: Monthly portfolio review. Usage: /monthly <amount>
 argument-hint: <amount-usd>
-allowed-tools: Bash, Read
+allowed-tools: Bash, Read, WebSearch
 ---
 
-Run `python src/invest.py $ARGUMENTS` and produce the review using this exact structure:
+Run `python src/invest.py $ARGUMENTS` and produce the review in two steps:
+
+## Step 1 — Distribution
+
+Show the output as two tables:
 
 **This month: $[AMOUNT]**
 
@@ -18,7 +22,17 @@ Run `python src/invest.py $ARGUMENTS` and produce the review using this exact st
 |--------|-----|-------------|
 | (each ticker from stocks breakdown, sorted by USD desc) |
 
-**Recommendations:**
-- (max 4 bullets: concentration risks, names to cut/add, sizing issues)
+## Step 2 — Market-aware recommendations
 
-Rules: no fluff, no disclaimers, no extra sections, percentages calculated from the script output.
+Before giving recommendations, use WebSearch to look up:
+- Current prices or recent performance of the top holdings (SPY, YPF, VIST, GLD, NVDA, META)
+- Any relevant macro news (Argentina economy, oil prices, US market conditions)
+
+Then give recommendations as suggested YAML changes:
+
+**Recommendations:**
+- (max 5 bullets combining: allocation math issues + market context)
+- Each bullet should be actionable: keep / increase weight / decrease weight / drop / add
+- If you suggest a weight change, state the new weight (e.g. "increase GLD from 0.08 to 0.10")
+
+Rules: no fluff, no disclaimers, no extra sections. Direct and concrete.
