@@ -15,4 +15,3 @@ In Claude Code:
 /monthly <amount>
 ```
 
-See [CONTEXT.md](CONTEXT.md) for project structure and conventions.
