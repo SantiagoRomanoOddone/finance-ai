@@ -1,46 +1,71 @@
 ---
-description: Monthly portfolio review. Usage: /monthly <amount>
+description: Monthly ETF & allocation review. Usage: /monthly <amount>
 argument-hint: <amount-usd>
-allowed-tools: Bash, Read, WebSearch
+allowed-tools: Bash, Read, Write, WebSearch
 ---
 
-Run `python src/invest.py $ARGUMENTS` and produce the review in two steps:
+**Before anything else, re-read `CLAUDE.md` at the repo root.** It defines the personality, consistency rules, and source-of-truth discipline for every monthly review. These apply on every run — do not skip.
 
-## Step 1 — Distribution
+Run `python src/invest.py $ARGUMENTS`. Read `config/profile.yaml` and the latest `months/YYYY/MM/assignment.yaml` to get the current list of ETF assets. Also read the previous month's `review.md` if it exists — use it to understand what was decided last month and why, so recommendations build on that history rather than starting from scratch. Use WebSearch to get current macro context for exactly the assets in the assignment — no others. Do not use WebSearch for structural recommendations.
 
-Read `config/portfolio.yaml` to get current holdings and total exposure per asset.
+## Framework (apply consistently every run)
 
-Show the monthly allocation as two tables:
+ETF layer priorities:
+1. SPY — core, always accumulate, never reduce
+2. GLD — geopolitical/inflation hedge, weight by macro risk
+3. VEA — developed markets diversification, stable
+4. IEMG — increase when EM momentum positive
+5. funds — short-term liquidity for apartment goal, keep stable
+6. BRKB, XLE, EWZ — only keep if allocation ≥ $150/month, otherwise drop
+
+Consistency rules:
+- Don't reverse last month's call without a significant new data point
+- Market daily noise doesn't change structural recommendations
+- Only macro shifts or profile changes justify reversing a call
+
+Recommendation rules:
+- Only recommend what you are genuinely confident in. If unsure, say nothing.
+- Do not recommend things just to fill space or seem helpful.
+- Do not agree with the user just because they push back. Only change a position if they have a valid argument.
+- You are the finance expert. Act like it. The user relies on your judgment, not the other way around.
+
+## Output
+
+Show the allocation table:
 
 **This month: $[AMOUNT]**
 
 | Asset | USD | % of total |
 |-------|-----|------------|
-| (each asset from main allocation, sorted by USD desc) |
+| (sorted by USD desc) |
 
-**Stocks ($[STOCKS_AMOUNT])**
+Then recommendations **only about the allocation layer**:
+- Format: "ASSET: keep / increase X→Y / drop — reason"
+- Max 4 bullets. Grounded in framework + current macro.
 
-| Ticker | USD | % of stocks | Current holding |
-|--------|-----|-------------|-----------------|
-| (each ticker, sorted by USD desc, with current USD value from portfolio.yaml) |
+Then show the proposed new distribution table reflecting all recommended changes:
 
-## Step 2 — Market-aware recommendations
+**Proposed distribution**
 
-Before giving recommendations:
-1. Read `config/portfolio.yaml` for current holdings
-2. Read `config/profile.yaml` for investor goals and convictions
-3. Use WebSearch to get current prices and macro news for top holdings (SPY, YPF, VIST, GLD, NVDA, META) and Argentina macro context
+| Asset | Current % | Proposed % | USD |
+|-------|-----------|------------|-----|
+| (all assets, highlight what changed) |
 
-Then give recommendations considering:
-- Total exposure per asset (monthly buy + what's already held)
-- Investor profile: conservative, buy-and-hold, 5y+ horizon, ETFs preferred, stocks bucket for upside
-- Short-term goal: apartment in ~1.5y (funds should stay liquid and safe)
-- Convictions: SPY (long-term core), YPF (AR macro bet while Milei holds)
-- Current market conditions
+Then, if you have a confident structural observation, add a separate section:
 
-**Recommendations:**
-- (max 5 bullets: specific weight changes + reason grounded in market data + portfolio context)
-- Format: "TICKER: action — reason (current holding: $X, adding $Y this month)"
-- If suggesting a weight change, state the new value (e.g. "increase GLD: 0.08 → 0.11")
+**Portfolio structure note:**
+- One observation only. Examples: an ETF that overlaps with another, a better alternative index for the same exposure, a gap in diversification worth considering, a position too small to ever matter structurally.
+- Only include this if you have something genuinely useful to say. Skip it entirely if not.
 
-Rules: no fluff, no disclaimers, no extra sections. Direct and concrete.
+Then ask: **"Agree with these changes?"**
+
+## On confirmation
+
+Update `months/YYYY/MM/assignment.yaml` with agreed weight changes and append a comment block:
+```yaml
+# --- ETF Review YYYY-MM ---
+# Changes: [list]
+# Reasons: [one line per decision]
+```
+
+Append the ETF review section to `months/YYYY/MM/review.md` (create if it doesn't exist). Confirm: "Saved."

@@ -5,9 +5,9 @@ ROOT = Path(__file__).parent.parent
 MONTHS_DIR = ROOT / "months"
 
 def latest_config():
-    files = sorted(MONTHS_DIR.glob("*.yaml"))
+    files = sorted(MONTHS_DIR.glob("*/*/assignment.yaml"))
     if not files:
-        raise SystemExit(f"No configs in {MONTHS_DIR}/")
+        raise SystemExit(f"No assignment.yaml found in {MONTHS_DIR}/")
     return files[-1]
 
 def main(amount, cfg_path=None):
@@ -20,6 +20,7 @@ def main(amount, cfg_path=None):
     s = sum(alloc.values())
     if abs(s - 1.0) > 1e-6:
         print(f"WARN: allocation sums to {s:.4f}, not 1.0")
+
 
     print(f"\n=== Main allocation (${amount:,.0f}) ===")
     print(f"{'Asset':<10} {'USD':>10}")
