@@ -8,7 +8,9 @@ Run `python src/invest.py $ARGUMENTS` and produce the review in two steps:
 
 ## Step 1 — Distribution
 
-Show the output as two tables:
+Read `config/portfolio.yaml` to get current holdings and total exposure per asset.
+
+Show the monthly allocation as two tables:
 
 **This month: $[AMOUNT]**
 
@@ -18,21 +20,27 @@ Show the output as two tables:
 
 **Stocks ($[STOCKS_AMOUNT])**
 
-| Ticker | USD | % of stocks |
-|--------|-----|-------------|
-| (each ticker from stocks breakdown, sorted by USD desc) |
+| Ticker | USD | % of stocks | Current holding |
+|--------|-----|-------------|-----------------|
+| (each ticker, sorted by USD desc, with current USD value from portfolio.yaml) |
 
 ## Step 2 — Market-aware recommendations
 
-Before giving recommendations, use WebSearch to look up:
-- Current prices or recent performance of the top holdings (SPY, YPF, VIST, GLD, NVDA, META)
-- Any relevant macro news (Argentina economy, oil prices, US market conditions)
+Before giving recommendations:
+1. Read `config/portfolio.yaml` for current holdings
+2. Read `config/profile.yaml` for investor goals and convictions
+3. Use WebSearch to get current prices and macro news for top holdings (SPY, YPF, VIST, GLD, NVDA, META) and Argentina macro context
 
-Then give recommendations as suggested YAML changes:
+Then give recommendations considering:
+- Total exposure per asset (monthly buy + what's already held)
+- Investor profile: conservative, buy-and-hold, 5y+ horizon, ETFs preferred, stocks bucket for upside
+- Short-term goal: apartment in ~1.5y (funds should stay liquid and safe)
+- Convictions: SPY (long-term core), YPF (AR macro bet while Milei holds)
+- Current market conditions
 
 **Recommendations:**
-- (max 5 bullets combining: allocation math issues + market context)
-- Each bullet should be actionable: keep / increase weight / decrease weight / drop / add
-- If you suggest a weight change, state the new weight (e.g. "increase GLD from 0.08 to 0.10")
+- (max 5 bullets: specific weight changes + reason grounded in market data + portfolio context)
+- Format: "TICKER: action — reason (current holding: $X, adding $Y this month)"
+- If suggesting a weight change, state the new value (e.g. "increase GLD: 0.08 → 0.11")
 
 Rules: no fluff, no disclaimers, no extra sections. Direct and concrete.
